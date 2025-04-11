@@ -133,7 +133,7 @@ if st.button("Empezar"):
 
 # Mostrar palabra aleatoria (si ya fue generada)
 if "random_word" in st.session_state:
-    st.write(f"✅ La palabra aleatoria es: {st.session_state.random_word}")
+    #st.write(f"✅ La palabra aleatoria es: {st.session_state.random_word}")
 
     # Entrada del usuario
     user_word = st.text_input("Introduzca la palabra",key="valor_entrada", value="",max_chars=num).upper()
@@ -144,7 +144,7 @@ if "random_word" in st.session_state:
 
 
         st.write(f"🔤 Letras ingresadas: {user_list}")
-        st.write(f"🧠 Letras de la palabra correcta: {st.session_state.random_list}")
+        #st.write(f"🧠 Letras de la palabra correcta: {st.session_state.random_list}")
 
         #--------------------------------------------
         #--------------------------------------------
