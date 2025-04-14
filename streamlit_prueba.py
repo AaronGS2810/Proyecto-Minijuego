@@ -1,5 +1,5 @@
 import streamlit as st
-from streamlit.runtime.scriptrunner import rerun
+#from streamlit.runtime.scriptrunner import rerun
 import random
 
 #Estilo de la pagina
@@ -198,7 +198,7 @@ if st.session_state.get("fin_juego", False):
         for key in list(st.session_state.keys()):
             del st.session_state[key]
         try:
-            rerun()
+            st.experimental_rerun()
         except:
             st.write("VUELVE A PULSAR REINICIO QUE NO LE DISTE BIEN")
 
