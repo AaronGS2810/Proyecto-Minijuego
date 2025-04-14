@@ -1,5 +1,4 @@
 import streamlit as st
-#from streamlit.runtime.scriptrunner import rerun
 import random
 
 #Estilo de la pagina
