@@ -1,10 +1,13 @@
-# Iteration 5: Streamlit Interactive Components
-
 import streamlit as st
-st.markdown(
-    """
+import random
+
+# Estilo visual claro
+st.markdown("""
     <style>
-        body { background-color: #f5f5f5; }
+        body, .stApp, html, [class*="css"]  {
+            background-color: #ffffff;
+            color: black;
+        }
         .stButton>button {
             width: 100%;
             height: 50px;
@@ -13,9 +16,12 @@ st.markdown(
             border-radius: 12px;
             border: none;
             transition: 0.3s;
+            background-color: #e0e0e0;
+            color: black;
         }
         .stButton>button:hover {
             transform: scale(1.05);
+            background-color: #d0d0d0;
         }
         .play-button button {
             background-color: #4CAF50 !important;
@@ -31,88 +37,129 @@ st.markdown(
             font-size: 22px;
             font-weight: bold;
             border-radius: 10px;
-            border: 2px solid #ddd;
-            background-color: white;
+            border: 2px solid #aaa;
+            background-color: #f5f5f5;
+            color: black;
         }
     </style>
-    """,
-    unsafe_allow_html=True
-)
+""", unsafe_allow_html=True)
 
-st.title('WELCOME TO MY WEB!')
-st.write('Let`s go!!!.')
-st.divider()
-# 5.2.1 A text input for user comments.
-
-
-
-
-
-import streamlit as st
-
-st.subheader("📝 Deja tu comentario")
-
-# Inicializar la lista si no existe
-if "comentarios" not in st.session_state:
-    st.session_state.comentarios = []
-
-# Inputs del usuario
-nombre = st.text_input("Dime tu nombre crack")
-comentario = st.text_area("Escribe tu comentario")
-
-# Botón para guardar
-if st.button("Enviar comentario"):
-    if nombre and comentario:
-        st.session_state.comentarios.append((nombre, comentario))
-        st.success("Comentario enviado ✅")
-    else:
-        st.warning("Por favor, completa ambos campos mi arma")
-
-
-# Button
-
-# Show user input from sidebar in main page
+# Título
+st.title('WORDLE!')
+st.write('Wordle es un juego de palabras en el que el objetivo es adivinar una palabra secreta en un número limitado de intentos.')
 st.divider()
 
-st.subheader("Elige tu lenguaje de programación favorito")
-opcion = st.radio("Selecciona una opcion:", ["Python", "Javascript", "C++"], key="radio_col2")
+# Palabras por longitud
+if "palabras_por_longitud" not in st.session_state:
+    st.session_state.palabras_por_longitud = {
+        4: ["casa", "amor", "niño", "vida", "pera", "mano", "mesa", "tuna", "ropa"],
+        5: ["perro", "mujer", "tarde", "niños", "madre", "padre", "radio", "plato", "calle"],
+        6: ["camino", "amigos", "nevera", "mañana", "comida", "escena", "pueblo", "ciudad", "dinero"],
+        7: ["montaña", "persona", "domingo", "familia", "momento", "ventana", "botella", "trabajo", "silencio"],
+        8: ["cuaderno", "escalera", "bombilla", "computar", "chorizos", "panadero", "mensajes", "problema", "telefono"],
+        9: ["universos", "mensajero", "mariposas", "aguacates", "escritora", "activista", "televisor", "diligente", "habitante"],
+        10: ["bicicletas", "panoramica", "cumpleaños", "revolucion", "fotografia", "organizado", "enfermeria", "muletillas", "relaciones"]
+    }
 
-if opcion == 'Python':
-    st.success(f"Elegiste {opcion} , y menos mal sino el SEPE te expulsa del curso (Naaah no lo te preocupes)")
-elif opcion == 'Javascript':
-    st.success(f"Elegiste {opcion} asi que no sabes que haces con tu vida")
+# Selección de longitud y dificultad
+num = st.selectbox("Introduce el número de letras para jugar", list(st.session_state.palabras_por_longitud.keys()))
+dificultad = st.radio("Elige tu dificultad", ("Facil", "Intermedio", "Dificil"))
+
+# Determinar intentos
+if dificultad == "Facil":
+    intentos = 6
+elif dificultad == "Intermedio":
+    intentos = 5
 else:
-    st.success(f"Elegiste {opcion} y asi te va")
+    intentos = 4
 
-st.divider()
+# Inicializar sesión
+if "intentos_previos" not in st.session_state:
+    st.session_state.intentos_previos = []
 
-# Slider
-st.subheader("Slider")
-user_age = st.slider("Select your age:", min_value=0, max_value=100, value=25)
-st.write(f"You selected: {user_age} years old")
-if user_age > 50:
-    st.write(f"Vas por menos del 50% del juego de tu vida pasado asi que aprovecha al maximo lo que te queda")
-    
-st.divider()
+# Botón empezar
+if st.button("Empezar"):
+    st.session_state.random_word = random.choice(st.session_state.palabras_por_longitud[num]).upper()
+    st.session_state.random_list = list(st.session_state.random_word)
+    st.session_state.intentos = intentos
+    st.session_state.fin_juego = False
+    st.session_state.intentos_previos = []
 
+    # 👇 Scroll automático al input
+    st.markdown("""
+        <script>
+            window.location.href = '#entrada';
+        </script>
+    """, unsafe_allow_html=True)
 
-st.subheader("¿Quieres saber un secreto?")
+# Mostrar campo de juego si la palabra ya fue generada
+if "random_word" in st.session_state and not st.session_state.get("fin_juego", False):
 
-mostrar_mensaje = st.checkbox("Mostrar secreto")
+    # 📍 Punto al que hacemos scroll
+    st.markdown("<div id='entrada'></div>", unsafe_allow_html=True)
 
-if mostrar_mensaje:
-    st.write("Eres el mejor analista de datos que existe actualmente en esta pagina (y el unico)")
+    user_word = st.text_input("Introduce una palabra", max_chars=num).upper()
 
+    if len(user_word) == num:
+        user_list = list(user_word)
+        st.session_state.intentos -= 1
 
+        resultado = []
+        for i in range(num):
+            letra = user_list[i]
+            if letra == st.session_state.random_list[i]:
+                resultado.append((letra, "#6aaa64"))  # Verde
+            elif letra in st.session_state.random_list:
+                resultado.append((letra, "#c9b458"))  # Amarillo
+            else:
+                resultado.append((letra, "#787c7e"))  # Gris
 
-# Mostrar comentarios guardados
-st.divider()
-st.subheader("Comentarios")
+        st.session_state.intentos_previos.append(resultado)
 
-if st.session_state.comentarios:
-    for n, c in reversed(st.session_state.comentarios):  # Muestra el más reciente arriba
-        st.markdown(f"**{n}** dijo:")
-        st.write(f"> {c}")
-        st.markdown("---")
-else:
-    st.write("No hay comentarios todavia.")
+        # Mostrar intentos
+        for lista in st.session_state.intentos_previos:
+            with st.container():
+                col = st.columns(num)
+                for i, (letra, color) in enumerate(lista):
+                    col[i].markdown(
+                        f"""
+                        <div style='
+                            width: 50px;
+                            height: 50px;
+                            background-color: {color};
+                            color: white;
+                            font-size: 18px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            border-radius: 5px;
+                            margin: auto;
+                        '>{letra}</div>
+                        """,
+                        unsafe_allow_html=True
+                    )
+                st.write("")
+
+        # Verificar victoria
+        if user_list == st.session_state.random_list:
+            st.success("🎉 ¡MUY BIEN! Has ganado máquina.")
+            st.balloons()
+            st.session_state.fin_juego = True
+
+        # Verificar derrota
+        if st.session_state.intentos == 0 and user_list != st.session_state.random_list:
+            st.error(f"Hoy no es tu día 😅 La palabra era: {st.session_state.random_word}")
+            st.session_state.fin_juego = True
+
+# Mostrar botón de reinicio si el juego terminó
+if st.session_state.get("fin_juego", False):
+    st.markdown("---")
+    st.subheader("¿Quieres volver a jugar?")
+    if st.button("🔁 Reiniciar juego"):
+        for key in list(st.session_state.keys()):
+            del st.session_state[key]
+        try:
+            from streamlit.runtime.scriptrunner import rerun
+            rerun()
+        except:
+            st.experimental_rerun()
