@@ -62,7 +62,7 @@ st.markdown(
 
 
 # TITULO
-
+st.image("wordleeeee.png")
 st.title('WORDLE!')
 st.write('Wordle es un juego de palabras en el que el objetivo es adivinar una palabra secreta de cinco letras en un máximo de seis intentos.')
 st.divider()
@@ -78,6 +78,45 @@ if "palabras_por_longitud" not in st.session_state: # El session_state es para g
     9: ["universos", "mensajero", "mariposas", "aguacates", "escritora", "activista", "televisor", "diligente", "habitante"],
     10: ["bicicletas", "panoramica", "cumpleaños", "revolucion", "fotografia", "organizado", "enfermeria", "muletillas", "relaciones"]
 }
+    
+if "expresion_ganadora" not in st.session_state:
+    st.session_state.expresion_ganadora = ["Echa la loteria que estas en racha", "Estas a un paso de un Nobel de Literatura", "INCREIBLE!!! Eres la persona más inteligente de esta página",
+    "¡Eres el Wordle Whisperer!",
+    "MUY BIEN!!!! Has ganado maquina",
+    "Diccionario humano detectado. Reiniciando el sistema.",
+    "Ganaste. Otra vez. ¿Estás bien? ¿Es esto tu superpoder?",
+    "Te vamos a prohibir jugar. Deja algo para los demás.",
+    "La RAE quiere contratarte como oráculo.",
+    "Si fueras más bueno, serías ilegal en varios países.",
+    "Wordle lloró. No puede seguir así.",
+    "Ni tus calcetines combinan tan bien como esas letras.",
+    "Tienes más letras en orden que tu vida. Y eso es mucho decir.",
+    "¿Ya avisaste a tus enemigos que hoy te sientes invencible?",
+    "Con esa victoria, puedes reclamar una tostadora imaginaria.",
+    "Ganaste al Wordle. Pero aún no puedes doblar bien las sábanas.",
+    "La palabra de hoy era fácil… pero tú la hiciste arte.",
+    "Si el Wordle fuera una batalla, tú ya estarías coronado en Valhalla."
+]
+    
+if "expresion_perdedora" not in st.session_state:
+    st.session_state.expresion_perdedora = [
+    "Perdiste. Pero al menos no fue en público. Ah, espera…",
+    "Tus letras estaban tan lejos de la palabra que NASA las rastreó como objetos voladores.",
+    "La palabra no era 'ERROR', pero lo intentaste con el corazón.",
+    "Wordle te ganó. De nuevo. ¿Te sientes atacado personalmente o solo derrotado espiritualmente?",
+    "Tus intentos fueron como consejos de tu ex: bien intencionados, pero totalmente inútiles.",
+    "Jugaste con ganas… y con cero resultados.",
+    "¿Intentaste escribir 'ayuda'? Porque lo pareces necesitar.",
+    "Esa palabra no era para ti. Ni para nadie sin un doctorado en telepatía.",
+    "Te quedaste más cerca del llanto que de la palabra correcta.",
+    "Tus letras bailaron alrededor de la respuesta, pero nunca se comprometieron. Como tú en tus relaciones.",
+    "Wordle hoy: 1. Tú: 0. Tu dignidad: desaparecida.",
+    "Si tu estrategia era no ganar, felicitaciones, fue impecable.",
+    "Mira el lado bueno: al menos no perdiste en ajedrez contra una tostadora.",
+    "Tus intentos fueron como mi fe en ti: se desvanecieron rápidamente.",
+    "Ese resultado fue tan triste que el diccionario pidió una orden de alejamiento."
+]
+
 # st.selectbox(label="hola", options=(4,5,6,7,8,9,10))
 num = st.selectbox(label="Introduce el numero de letras para jugar", options= (x for x in st.session_state.palabras_por_longitud.keys()))
 
@@ -110,6 +149,8 @@ if "intentos_previos" not in st.session_state:
 #Boton de empezar
 if st.button("Empezar"):
     st.session_state.random_word = random.choice(st.session_state.palabras_por_longitud[num]).upper()
+    st.session_state.random_win = random.choice(st.session_state.expresion_ganadora)
+    st.session_state.random_lose = random.choice(st.session_state.expresion_perdedora)
     random_list =[]
     for letra in st.session_state.random_word:
         random_list.append(letra)
@@ -139,11 +180,12 @@ if "random_word" in st.session_state:
         #--------------------------------------------
 
         resultado = []  #Donde se guardara la lista dde la palabra ingresada
+
         for i in range(len(user_list)):
             letra = user_list[i]
             if letra == st.session_state.random_list[i]:
                 resultado.append((letra,"#6aaa64"))  # Verde
-            elif letra in st.session_state.random_list:
+            elif letra in st.session_state.random_list and letra != st.session_state.random_list[i]:
                 resultado.append((letra,"#c9b458"))  # Amarillo
             else:
                 resultado.append((letra,"#787c7e"))  # Gris
@@ -175,14 +217,15 @@ if "random_word" in st.session_state:
 
         #Cuadno gana
         if user_list == st.session_state.random_list:
-            st.success("MUY BIEN!!!! Has ganado maquina")
+            st.success(f"{st.session_state.random_win}")
             st.balloons()
             st.session_state.intentos_previos = []
             st.session_state.fin_juego = True
 
         #Cuando pierde         
         if st.session_state.intentos == 0 and user_list != st.session_state.random_list:
-            st.error(f"Hoy no es tu dia")
+            st.error(f"{st.session_state.random_lose}")
+            st.write(f"La palabra era {st.session_state.random_word}")
             st.session_state.fin_juego = True
         #--------------------------------------------------
         #-------------------------------------------
