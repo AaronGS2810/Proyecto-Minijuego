@@ -1,24 +1,34 @@
 import streamlit as st
 import random
 
+
+import base64
+
+def obtener_base64_local(imagen):
+    with open(imagen, "rb") as f:
+        data = f.read()
+    return base64.b64encode(data).decode()
+
+fondo_base64 = obtener_base64_local("fondo_app.png")
 #Estilo de la pagina
 st.markdown(
-    """
+    f"""
     <style>
-        body {
-            background-color: #ffffff;
+        .stApp {{
+            background-image: url("data:image/jpg;base64,{fondo_base64}");
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-position: center;
             color: black;
-        }
-        .stApp {
-            background-color: #ffffff;
-            color: black;
-        }
-        html, body, [class*="css"]  {
-            background-color: #ffffff;
-            color: black;
-        }
+        }}
 
-        .stButton>button {
+        html, body, [class*="css"] {{
+            background-color: transparent;
+            color: black;
+        }}
+
+        .stButton>button {{
             width: 100%;
             height: 50px;
             font-size: 20px;
@@ -26,38 +36,37 @@ st.markdown(
             border-radius: 12px;
             border: none;
             transition: 0.3s;
-            background-color: #e0e0e0;
+            background-color: #fff9c4;
             color: black;
-        }
-        .stButton>button:hover {
+        }}
+        .stButton>button:hover {{
             transform: scale(1.05);
             background-color: #d0d0d0;
-        }
+        }}
 
-        .play-button button {
+        .play-button button {{
             background-color: #4CAF50 !important;
             color: white;
-        }
-        .reset-button button {
+        }}
+        .reset-button button {{
             background-color: #f44336 !important;
             color: white;
-        }
+        }}
 
-        .choice-box {
+        .choice-box {{
             text-align: center;
             padding: 15px;
             font-size: 22px;
             font-weight: bold;
             border-radius: 10px;
             border: 2px solid #aaa;
-            background-color: #f5f5f5;
+            background-color: rgba(255,255,255,0.8);
             color: black;
-        }
+        }}
     </style>
     """,
     unsafe_allow_html=True
 )
-
 
 
 
