@@ -1,8 +1,8 @@
 import streamlit as st
 import random
-
-
 import base64
+
+#poner fondo
 
 def obtener_base64_local(imagen):
     with open(imagen, "rb") as f:
