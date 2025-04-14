@@ -180,7 +180,7 @@ if "random_word" in st.session_state:
             st.session_state.intentos= intentos
         
         st.session_state.intentos -= 1
-        st.write(f"Tienes {st.session_state.intentos} intentos para hacer")
+        st.subheader(f"Tienes {st.session_state.intentos} intentos")
         
         #st.write(f"palabra puesta {user_list}")
         #st.write(f"palabra correcta {st.session_state.random_list}")
