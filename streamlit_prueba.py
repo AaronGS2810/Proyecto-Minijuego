@@ -80,7 +80,7 @@ if "palabras_por_longitud" not in st.session_state: # El session_state es para g
 }
 # st.selectbox(label="hola", options=(4,5,6,7,8,9,10))
 num = st.selectbox(label="Introduce el numero de letras para jugar", options= (x for x in st.session_state.palabras_por_longitud.keys()))
-st.write(f"El numero es {num}")
+
 # DIFICULTAD
 
 F = "Facil"
@@ -91,8 +91,8 @@ dificultad = st.radio("Elige tu dificultad", (F,I,D))
 
 st.divider()
 
-if num in st.session_state.palabras_por_longitud:
-    st.write(f"El numero es {num} y la palabra es ")
+# if num in st.session_state.palabras_por_longitud:
+#     st.write(f"El numero es {num} y la palabra es ")
 
 # INTENTOS
 
